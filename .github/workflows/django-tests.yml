@@ -48,4 +48,4 @@ jobs:
           DB_PORT: ${{ secrets.PORT }}
           SERVER_URL: ${{ secrets.SERVER_URL }}
         run: |
-          uv run manage.py test api
+          uv run manage.py test api -v 2
