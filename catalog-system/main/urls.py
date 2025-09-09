@@ -36,5 +36,4 @@ urlpatterns = [
     
     # API app
     path('api/', include('api.urls')),
-
 ]
