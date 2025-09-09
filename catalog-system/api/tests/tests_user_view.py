@@ -183,7 +183,7 @@ class CreateUserTests(SimpleTestCase):
         request = self.factory.post("/users/create", mock_data, format="json")
         force_authenticate(request, user=admin_user())
         with patch("api.views.user_views.UserInputSerializer") as serializer_cls, \
-            patch("api.views.user_views.User.objects.get") as get_mock:
+            patch("api.views.user_views.User.objects.filter") as get_mock:
             user = None
             get_mock.return_value = user
             serializer_instance = MagicMock()
@@ -223,7 +223,7 @@ class CreateUserTests(SimpleTestCase):
         request = self.factory.post("/users/create", mock_data, format="json")
         force_authenticate(request, user=admin_user())
         with patch("api.views.user_views.UserInputSerializer") as serializer_cls, \
-            patch("api.views.user_views.User.objects.get") as get_mock:
+            patch("api.views.user_views.User.objects.filter") as get_mock:
             user = SimpleNamespace()
             get_mock.return_value = user
             serializer_instance = MagicMock()
@@ -274,7 +274,7 @@ class CreateUserTests(SimpleTestCase):
         request = self.factory.post("/users/create", mock_data, format="json")
         force_authenticate(request, user=admin_user())
         with patch("api.views.user_views.UserInputSerializer") as serializer_cls, \
-            patch("api.views.user_views.User.objects.get") as get_mock:
+            patch("api.views.user_views.User.objects.filter") as get_mock:
             user = None
             get_mock.return_value = user
             serializer_instance = MagicMock()
@@ -304,7 +304,7 @@ class CreateUserTests(SimpleTestCase):
         force_authenticate(request, user=admin_user())
         # Test function with mock data
         with patch("api.views.user_views.UserInputSerializer") as serializer_cls, \
-            patch("api.views.user_views.User.objects.get") as get_mock:
+            patch("api.views.user_views.User.objects.filter") as get_mock:
             user = None
             get_mock.return_value = user
             serializer_instance = MagicMock()
