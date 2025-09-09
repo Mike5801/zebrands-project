@@ -1,0 +1,45 @@
+name: Django unit tests (uv, no DB)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  unit-nodb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    defaults:
+      run:
+        working-directory: catalog-system   # <-- pyproject.toml & manage.py live here
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+        # Installs uv and the selected Python version (cached)
+      - name: Install uv & Python
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Show versions
+        run: |
+          uv --version
+          uv run python -c "import sys; print('Python', sys.version)"
+          uv run python -c "import django; print('Django', django.get_version())"
+
+      - name: Run unit tests
+        env:
+          DJANGO_SETTINGS_MODULE: main.settings   # <-- your Django project package
+          SECRET_KEY: "test-secret"
+        run: |
+          uv run manage.py test api
