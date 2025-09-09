@@ -13,21 +13,23 @@
     - [x] Setup docker dev container 
         - [x] Setup Django and postgresql connection in container
 - Implementation of solution
-    - [] 1. As an Admin, I want to manage other admins, so that I can assess who has admin permissions  to change the catalog system
+    - [x] 1. As an Admin, I want to manage other admins, so that I can assess who has admin permissions  to change the catalog system
         a. Use cases:
             i. 1.1 - Create users
                 - Acceptance Criteria:
-                    - [] Only admins should be able to perform this
-                    - [] After execution, a new user with the specified username and encrypted password should be created in the database
-                    - [] If a user already exists, it should not create a user in the database and throw an error
+                    - [x] Only admins should be able to perform this
+                    - [x] After execution, a new user with the specified username and encrypted password should be created in the database
+                    - [x] If a user already exists, it should not create a user in the database and throw an error
             ii. 1.2 - Update users
                 - Acceptance Criteria:
-                    - [] Only admins should be able to perform this
-                    - [] After execution, the user should be updated with new data
+                    - [x] Only admins should be able to perform this
+                    - [x] After execution, the user should be updated with new data
+                    - [x] After execution, if user is superuser, it should fail
             iii. 1.3 - Delete users
                 - Acceptance Criteria:
-                    - [] Only admins should be able to perform this
-                    - [] After execution, the user should be deactivated in the database
+                    - [x] Only admins should be able to perform this
+                    - [x] After execution, the user should be deactivated in the database
+                    - [x] After execution, if user is superuser, it should fail
     - [x] 2. As an Admin, I want to manage the products, so that I can adapt the product to current market and tendencies
         a. Use cases:
             i. 2.1 - Create products
@@ -55,7 +57,7 @@
                     - [x] Users should be able to see one product
                         - [x] For every individual product seen, the views counter should increase
                     - [] Users should be able to see a range of products
-    - [] 5. As an Anonymouse user with admin account, I want to sign in to the catalog system, so that I can perform admin actions
+    - [x] 5. As an Anonymouse user with admin account, I want to sign in to the catalog system, so that I can perform admin actions
         a. User cases:
             i. 5.1 - Login
                 - Acceptance Criteria
