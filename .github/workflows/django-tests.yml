@@ -41,5 +41,12 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: main.settings   # <-- your Django project package
           SECRET_KEY: "test-secret"
+          NAME: ${{ secrets.NAME }}
+          USER:: ${{ secrets.USER }}
+          PASSWORD:: ${{ secrets.PASSWORD }}
+          HOST:: ${{ secrets.HOST }}
+          PORT:: ${{ secrets.PORT }}
+          SERVER_URL:: ${{ secrets.SERVER_URL }}
+
         run: |
           uv run manage.py test api
