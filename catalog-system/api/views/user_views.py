@@ -63,7 +63,7 @@ def get_users(request):
 @permission_classes([IsAdminUser])
 def create_user(request):
     try:
-        user = User.objects.get(username=request.data["username"])
+        user = User.objects.filter(username=request.data["username"])
         if user:
             return Response(
                 { "message": f"User with username {request.data['username']} already exists" }, 
