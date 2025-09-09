@@ -27,8 +27,8 @@
             iii. 1.3 - Delete users
                 - Acceptance Criteria:
                     - [] Only admins should be able to perform this
-                    - [] After execution, the user should not exist in the database
-    - [] 2. As an Admin, I want to manage the products, so that I can adapt the product to current market and tendencies
+                    - [] After execution, the user should be deactivated in the database
+    - [x] 2. As an Admin, I want to manage the products, so that I can adapt the product to current market and tendencies
         a. Use cases:
             i. 2.1 - Create products
                 - Acceptance Criteria:

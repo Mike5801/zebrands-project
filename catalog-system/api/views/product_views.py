@@ -30,14 +30,14 @@ def get_products(request):
     try:
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @extend_schema(
     tags=["Products"],
     summary="Create a product",
-    description="Creates a product in the catalog. You need to be authenticated and an Admin to use this endpoint",
+    description="Creates a product in the catalog. You need to be authenticated and be an Admin to use this endpoint",
     request=inline_serializer(
         name="ProductInput",
         fields={
@@ -94,14 +94,14 @@ def create_product(request):
 def get_single_product(request, id):
     try:
         product = Product.objects.get(sku=id)
+        product.views = product.views + 1
+        product.save()
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    product.views = product.views + 1
-    product.save()
-    serializer = ProductSerializer(product)
-    return Response(serializer.data, status=status.HTTP_200_OK)
     
 @extend_schema(
     tags=["Products"],
@@ -140,17 +140,14 @@ def get_single_product(request, id):
 @permission_classes([IsAdminUser])
 def update_product(request, id):
     try:
-        try:
-            product = Product.objects.get(sku=id)
-        except Product.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        except Exception:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        product = Product.objects.get(sku=id)
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -176,13 +173,10 @@ def update_product(request, id):
 @permission_classes([IsAdminUser])
 def delete_product(request, id):
     try:
-        try:
-            product = Product.objects.get(sku=id)
-        except Product.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        except Exception:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        product = Product.objects.get(sku=id)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
