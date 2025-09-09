@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, inline_serializer
 from .models import Product
-from .serializer import ProductSerializer
+from .serializers import ProductSerializer
 
 ERROR_SCHEMA = {
     "type": "object",
