@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -42,9 +43,47 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
     'rest_framework',
-    'api'
+    'api',
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication"
+    ]
+}
+
+
+# Swagger documentation settings
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Zebrands Products Catalog API",
+    "DESCRIPTION": "Swagger documentation for Zebrands API",
+    "VERSION": "1.0.0",
+    "SECURITY": [{"bearerAuth": []}],
+    "SERVERS": [
+        {"url": os.environ["SERVER_URL"]}
+    ],
+    "COMPONENTS": {
+        "SECURITY_SCHEMES": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
+
+# JWT Token settings
+SIMLPE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),    
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ALGORITHM": "HS256",
+    "AUTH_HEADER_TYPES": ("Bearer")
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
