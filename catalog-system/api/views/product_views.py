@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, inline_serializer
-from .models import Product
-from .serializers import ProductSerializer
+from api.models import Product
+from api.serializers import ProductSerializer
 
 ERROR_SCHEMA = {
     "type": "object",
@@ -17,9 +17,11 @@ ERROR_SCHEMA = {
 @extend_schema(
     tags=["Products"],
     summary="Get all products",
+    description="Gets all the available products from the catalog",
     auth=[],
     responses={
         200: ProductSerializer(many=True),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["GET"])
@@ -28,13 +30,14 @@ def get_products(request):
     try:
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @extend_schema(
     tags=["Products"],
     summary="Create a product",
+    description="Creates a product in the catalog. You need to be authenticated and be an Admin to use this endpoint",
     request=inline_serializer(
         name="ProductInput",
         fields={
@@ -59,10 +62,12 @@ def get_products(request):
     ],
     responses={
         201: ProductSerializer,        
-        400: OpenApiResponse(response=ERROR_SCHEMA)
+        400: OpenApiResponse(response=ERROR_SCHEMA),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["POST"])
+@permission_classes([IsAdminUser])
 def create_product(request):
     try:
         serializer = ProductSerializer(data=request.data)
@@ -75,29 +80,33 @@ def create_product(request):
 
 @extend_schema(
     tags=["Products"],
+    description="Gets one product from the catalog based on the id",
     summary="Get a single product",
     auth=[],
     responses={
         200: ProductSerializer,        
-        404: OpenApiResponse(response=ERROR_SCHEMA)
+        404: OpenApiResponse(response=ERROR_SCHEMA),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_single_product(request, id):
     try:
-        try:
-            product = Product.objects.get(sku=id)
-        except Product.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        product = Product.objects.get(sku=id)
+        product.views = product.views + 1
+        product.save()
         serializer = ProductSerializer(product)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 @extend_schema(
     tags=["Products"],
-    summary="Create a product",
+    summary="Update a product",
+    description="Updates a product in the catalog based on the id. You need to be authenticated and an Admin to use this endpoint",
     request=inline_serializer(
         name="ProductInput",
         fields={
@@ -123,27 +132,29 @@ def get_single_product(request, id):
     responses={
         200: ProductSerializer,        
         400: OpenApiResponse(response=ERROR_SCHEMA),
-        404: OpenApiResponse(response=ERROR_SCHEMA)
+        404: OpenApiResponse(response=ERROR_SCHEMA),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["PUT"])
+@permission_classes([IsAdminUser])
 def update_product(request, id):
     try:
-        try:
-            product = Product.objects.get(sku=id)
-        except Product.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        product = Product.objects.get(sku=id)
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @extend_schema(
     tags=["Products"],
     summary="Delete a product",
+    description="Deletes a product in the catalog based on the id. You need to be authenticated and an Admin to use this endpoint",
     responses={
         204: OpenApiResponse(response={
             "type": "object",
@@ -154,17 +165,18 @@ def update_product(request, id):
                 }
             }
         }),        
-        404: OpenApiResponse(response=ERROR_SCHEMA)
+        404: OpenApiResponse(response=ERROR_SCHEMA),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["DELETE"])
+@permission_classes([IsAdminUser])
 def delete_product(request, id):
     try:
-        try:
-            product = Product.objects.get(sku=id)
-        except Product.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        product = Product.objects.get(sku=id)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)

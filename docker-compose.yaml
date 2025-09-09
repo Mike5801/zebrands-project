@@ -29,6 +29,10 @@ services:
           path: ./catalog-system/pyproject.toml
         - action: rebuild
           path: ./catalog-system/api/models.py
+        - action: rebuild
+          path: ./catalog-system/.env
+        - action: rebuild
+          path: ./catalog-system/main/settings.py
     depends_on:
       - zebrands-postgres-db
 
