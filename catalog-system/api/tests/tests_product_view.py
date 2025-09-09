@@ -4,7 +4,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from unittest.mock import patch, MagicMock
 from types import SimpleNamespace
 
-from api.views import get_products, create_product, get_single_product, update_product, delete_product
+from api.views import *
 
 # Create your tests here.
 class GetProductsTests(SimpleTestCase):
@@ -14,8 +14,8 @@ class GetProductsTests(SimpleTestCase):
     def test_gets_all_products_and_returns_200(self):
         # Define mock data and functions
         request = self.factory.get("/products/")
-        with patch("api.views.Product.objects.all") as all_mock, \
-            patch("api.views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.Product.objects.all") as all_mock, \
+            patch("api.views.product_views.ProductSerializer") as serializer_cls:
             query_set = object()
             all_mock.return_value = query_set
             
@@ -38,8 +38,8 @@ class GetProductsTests(SimpleTestCase):
     def test_db_fails_and_returns_500(self):
         # Define mock data and functions
         request = self.factory.get("/products/")
-        with patch("api.views.Product.objects.all", side_effect=Exception("db down")) as all_mock, \
-            patch("api.views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.Product.objects.all", side_effect=Exception("db down")) as all_mock, \
+            patch("api.views.product_views.ProductSerializer") as serializer_cls:
 
             # Test function with mock data
             response = get_products(request)
@@ -56,8 +56,8 @@ class GetSingleProductTests(SimpleTestCase):
     def test_gets_one_products_and_returns_200(self):
         # Define mock data and functions
         request = self.factory.get("/products/")
-        with patch("api.views.Product.objects.all") as all_mock, \
-            patch("api.views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.Product.objects.all") as all_mock, \
+            patch("api.views.product_views.ProductSerializer") as serializer_cls:
             query_set = object()
             all_mock.return_value = query_set
             
@@ -80,8 +80,8 @@ class GetSingleProductTests(SimpleTestCase):
     def test_returns_500_on_exception(self):
         # Define mock data and functions
         request = self.factory.get("/products/")
-        with patch("api.views.Product.objects.all", side_effect=Exception("db down")) as all_mock, \
-            patch("api.views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.Product.objects.all", side_effect=Exception("db down")) as all_mock, \
+            patch("api.views.product_views.ProductSerializer") as serializer_cls:
 
             # Test function with mock data
             response = get_products(request)
@@ -110,7 +110,7 @@ class CreateProductTests(SimpleTestCase):
         }
         request = self.factory.post("/products/create", mock_data, format="json")
         force_authenticate(request, user=self._admin_user())
-        with patch("api.views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.ProductSerializer") as serializer_cls:
             serializer_instance = MagicMock()
             serializer_instance.is_valid.return_value = True
             serializer_instance.data = {
@@ -139,7 +139,7 @@ class CreateProductTests(SimpleTestCase):
         }
         request = self.factory.post("/products/create", mock_data, format="json")
         force_authenticate(request, user=self._non_admin_user())
-        with patch("api.views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.ProductSerializer") as serializer_cls:
             # Test function with mock data
             response = create_product(request)
             
@@ -155,7 +155,7 @@ class CreateProductTests(SimpleTestCase):
         }
         request = self.factory.post("/products/create", mock_data, format="json")
         force_authenticate(request, user=self._admin_user())
-        with patch("api.views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.ProductSerializer") as serializer_cls:
             serializer_instance = MagicMock()
             serializer_instance.is_valid.return_value = False
             serializer_instance.errors = { "price": ["This field may not be blank"] }
@@ -179,7 +179,7 @@ class CreateProductTests(SimpleTestCase):
         request = self.factory.post("/products/create", mock_data, format="json")
         force_authenticate(request, user=self._admin_user())
         # Test function with mock data
-        with patch("api.views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.ProductSerializer") as serializer_cls:
             serializer_instance = MagicMock()
             serializer_instance.is_valid.return_value = True
             serializer_instance.data = {

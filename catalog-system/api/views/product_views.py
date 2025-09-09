@@ -4,8 +4,8 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, inline_serializer
-from .models import Product
-from .serializers import ProductSerializer
+from api.models import Product
+from api.serializers import ProductSerializer
 
 ERROR_SCHEMA = {
     "type": "object",
