@@ -1,0 +1,36 @@
+services:
+  zebrands-postgres-db:
+    image: postgres:17
+    ports:
+      - "5444:5432"
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  zebrands-server:
+    build:
+      context: ./catalog-system
+      dockerfile: DockerFile
+    ports:
+      - "3001:8000"
+    env_file:
+      - ./catalog-system/.env
+    command: bash -c "uv run manage.py makemigrations && uv run manage.py migrate && uv run manage.py runserver_plus 0.0.0.0:8000"
+    develop:
+      watch:
+        - action: sync
+          path: ./catalog-system
+          target: /app
+          ignore:
+            - .venv/
+        - action: rebuild
+          path: ./catalog-system/pyproject.toml
+        - action: rebuild
+          path: ./catalog-system/api/models.py
+    depends_on:
+      - zebrands-postgres-db
+
+volumes:
+  postgres-data:
