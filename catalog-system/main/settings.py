@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'drf_spectacular',
     'drf_spectacular_sidecar',
+    'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
     'api',
 ]
@@ -81,7 +82,9 @@ SIMLPE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),    
     "REFRESH_TOKEN_LIFETIME": timedelta(minutes=5),
     "ALGORITHM": "HS256",
-    "AUTH_HEADER_TYPES": ("Bearer")
+    "AUTH_HEADER_TYPES": ("Bearer"),
+    "ROTATE_REFRESH_ROKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True
 }
 
 MIDDLEWARE = [
