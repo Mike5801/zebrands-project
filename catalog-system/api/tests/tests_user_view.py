@@ -182,7 +182,10 @@ class CreateUserTests(SimpleTestCase):
         }
         request = self.factory.post("/users/create", mock_data, format="json")
         force_authenticate(request, user=admin_user())
-        with patch("api.views.user_views.UserInputSerializer") as serializer_cls:
+        with patch("api.views.user_views.UserInputSerializer") as serializer_cls, \
+            patch("api.views.user_views.User.objects.get") as get_mock:
+            user = None
+            get_mock.return_value = user
             serializer_instance = MagicMock()
             serializer_instance.is_valid.return_value = True
             serializer_instance.data = {
@@ -201,10 +204,41 @@ class CreateUserTests(SimpleTestCase):
             
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        get_mock.assert_called_once_with(username=mock_data["username"])
         serializer_cls.assert_called_once_with(data=mock_data)
         serializer_instance.is_valid.assert_called_once_with()
         serializer_instance.save.assert_called_once_with()
         self.assertEqual(response.data, serializer_instance.data)
+
+    def test_creates_user_same_username_fails_and_returns_201(self):
+        # Define mock data and functions
+        mock_data = {
+            "username": "user",
+            "email": "new_user@email.com",
+            "first_name": "user_first_name",
+            "last_name": "user_last_name",
+            "password": "user_password",
+            "is_staff": True
+        }
+        request = self.factory.post("/users/create", mock_data, format="json")
+        force_authenticate(request, user=admin_user())
+        with patch("api.views.user_views.UserInputSerializer") as serializer_cls, \
+            patch("api.views.user_views.User.objects.get") as get_mock:
+            user = SimpleNamespace()
+            get_mock.return_value = user
+            serializer_instance = MagicMock()
+            serializer_cls.return_value = serializer_instance
+            serializer_instance.save = MagicMock()
+            
+            # Test function with mock data
+            response = create_user(request)
+            
+        # Assertions
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        get_mock.assert_called_once_with(username=mock_data["username"])
+        serializer_cls.assert_not_called()
+        serializer_instance.is_valid.assert_not_called()
+        serializer_instance.save.asser_not_called()
 
     def test_non_admin_creates_user_and_returns_403(self):
         # Define mock data and functions
@@ -239,7 +273,10 @@ class CreateUserTests(SimpleTestCase):
         }
         request = self.factory.post("/users/create", mock_data, format="json")
         force_authenticate(request, user=admin_user())
-        with patch("api.views.user_views.UserInputSerializer") as serializer_cls:
+        with patch("api.views.user_views.UserInputSerializer") as serializer_cls, \
+            patch("api.views.user_views.User.objects.get") as get_mock:
+            user = None
+            get_mock.return_value = user
             serializer_instance = MagicMock()
             serializer_instance.is_valid.return_value = False
             serializer_cls.return_value = serializer_instance
@@ -249,6 +286,7 @@ class CreateUserTests(SimpleTestCase):
             
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        get_mock.assert_called_once_with(username=mock_data["username"])
         serializer_cls.assert_called_once_with(data=mock_data)
         serializer_instance.is_valid.assert_called_once_with()
         serializer_instance.save.assert_not_called()
@@ -265,7 +303,10 @@ class CreateUserTests(SimpleTestCase):
         request = self.factory.post("/users/create", mock_data, format="json")
         force_authenticate(request, user=admin_user())
         # Test function with mock data
-        with patch("api.views.user_views.UserInputSerializer") as serializer_cls:
+        with patch("api.views.user_views.UserInputSerializer") as serializer_cls, \
+            patch("api.views.user_views.User.objects.get") as get_mock:
+            user = None
+            get_mock.return_value = user
             serializer_instance = MagicMock()
             serializer_instance.is_valid.return_value = True
             serializer_instance.save = MagicMock(side_effect=Exception("db down"))
@@ -276,6 +317,7 @@ class CreateUserTests(SimpleTestCase):
         
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        get_mock.assert_called_once_with(username=mock_data["username"])
         serializer_cls.assert_called_once_with(data=mock_data)
         serializer_instance.is_valid.assert_called_once_with()
 
