@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, inline_serializer
@@ -20,6 +20,7 @@ ERROR_SCHEMA = {
     auth=[],
     responses={
         200: ProductSerializer(many=True),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["GET"])
@@ -59,10 +60,12 @@ def get_products(request):
     ],
     responses={
         201: ProductSerializer,        
-        400: OpenApiResponse(response=ERROR_SCHEMA)
+        400: OpenApiResponse(response=ERROR_SCHEMA),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["POST"])
+@permission_classes([IsAdminUser])
 def create_product(request):
     try:
         serializer = ProductSerializer(data=request.data)
@@ -79,7 +82,8 @@ def create_product(request):
     auth=[],
     responses={
         200: ProductSerializer,        
-        404: OpenApiResponse(response=ERROR_SCHEMA)
+        404: OpenApiResponse(response=ERROR_SCHEMA),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["GET"])
@@ -123,10 +127,12 @@ def get_single_product(request, id):
     responses={
         200: ProductSerializer,        
         400: OpenApiResponse(response=ERROR_SCHEMA),
-        404: OpenApiResponse(response=ERROR_SCHEMA)
+        404: OpenApiResponse(response=ERROR_SCHEMA),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["PUT"])
+@permission_classes([IsAdminUser])
 def update_product(request, id):
     try:
         try:
@@ -154,10 +160,12 @@ def update_product(request, id):
                 }
             }
         }),        
-        404: OpenApiResponse(response=ERROR_SCHEMA)
+        404: OpenApiResponse(response=ERROR_SCHEMA),
+        500: OpenApiResponse(response=ERROR_SCHEMA)
     }
 )
 @api_view(["DELETE"])
+@permission_classes([IsAdminUser])
 def delete_product(request, id):
     try:
         try:
