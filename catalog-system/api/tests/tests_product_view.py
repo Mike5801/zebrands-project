@@ -254,8 +254,9 @@ class UpdateProductTests(SimpleTestCase):
                 "price": 200.00,
                 "brand": "zebrands",
             }
+            serializer_instance.save = MagicMock()
             serializer_cls.return_value = serializer_instance
-            
+
             # Test function with mock data
             response = update_product(request, "123")
             
@@ -425,7 +426,7 @@ class DeleteProductTests(SimpleTestCase):
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         get_mock.assert_not_called()
-        product.delete.asser()
+        product.delete.assert_not_called()
 
     def test_delete_product_not_found_and_returns_404(self):
         # Define mock data and functions
