@@ -6,6 +6,7 @@ from rest_framework import status
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, inline_serializer
 from api.models import Product
 from api.serializers import ProductSerializer
+from api.utils import notify_via_email
 
 ERROR_SCHEMA = {
     "type": "object",
@@ -31,8 +32,11 @@ def get_products(request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 @extend_schema(
     tags=["Products"],
@@ -73,10 +77,14 @@ def create_product(request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            notify_via_email(serializer.instance.sku, serializer.instance.name, getattr(request.user, "email", None), "CREATE")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 @extend_schema(
     tags=["Products"],
@@ -100,8 +108,11 @@ def get_single_product(request, id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
     
 @extend_schema(
     tags=["Products"],
@@ -144,12 +155,16 @@ def update_product(request, id):
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            notify_via_email(serializer.instance.sku, serializer.instance.name, getattr(request.user, "email", None), "UPDATE")
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 @extend_schema(
     tags=["Products"],
@@ -174,9 +189,15 @@ def update_product(request, id):
 def delete_product(request, id):
     try:
         product = Product.objects.get(sku=id)
+        product_sku = product.sku
+        product_name = product.name
         product.delete()
+        notify_via_email(product_sku, product_name, getattr(request.user, "email", None), "DELETE")
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
