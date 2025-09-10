@@ -114,7 +114,7 @@ After the containers finished building, go to the following url where you will h
 - [http://localhost:3001/api/docs#/](http://localhost:3001/api/docs#/)
 
 ## Testing
-The tests are configured to run on every pull request throught a github workflow. You can run the tests locally too.
+The tests are configured to run on every pull request through a github workflow. You can run the tests locally too.
 
 ### Running locally
 1. [Install](https://docs.astral.sh/uv/getting-started/installation/) the uv package manager.
