@@ -4,8 +4,8 @@
 # Design
 - [x] Decide Stack
 - [x] Database design
-- [] Architecture design
-- [] Architecture scaled proposal
+- [x] Architecture design
+- [x] Architecture scaled proposal
 
 # Overall implementation steps
 - Setup environment
@@ -14,7 +14,9 @@
         - [x] Setup Django and postgresql connection in container
 - Implementation of solution
     - [x] 1. As an Admin, I want to manage other admins, so that I can assess who has admin permissions  to change the catalog system
+
         a. Use cases:
+
             i. 1.1 - Create users
                 - Acceptance Criteria:
                     - [x] Only admins should be able to perform this
@@ -31,7 +33,9 @@
                     - [x] After execution, the user should be deactivated in the database
                     - [x] After execution, if user is superuser, it should fail
     - [x] 2. As an Admin, I want to manage the products, so that I can adapt the product to current market and tendencies
+
         a. Use cases:
+
             i. 2.1 - Create products
                 - Acceptance Criteria:
                     - [x] Only admins should be able to perform this
@@ -45,32 +49,42 @@
                     - [x] Only admins should be able to perform this
                     - [x] After execution, the product should not exist in the database
     - [x] 3. As an Admin, I want to receive notifications on any change of products, so that I can track the history of the products
+
         a. Use cases:
+
             i. 3.1 - Send email notification on change of products
                 - Acceptance Criteria:
-                    - [x] After an execution of update or delete on products, an email should be sent to all the admins
+                    - [x] After an execution of create, update or delete on products, an email should be sent to all the admins
     - [x] 4. As an Anonymous user, I want to view the products so that I can know if what I want is available for purchase
+
         a. Use cases:
+
             i. 4.1 - Read products
                 - Acceptance Criteria:
                     - [x] After execution, users will get all the products in the database
                     - [x] Users should be able to see one product
                         - [x] For every individual product seen, the views counter should increase
     - [x] 5. As an Anonymouse user with admin account, I want to sign in to the catalog system, so that I can perform admin actions
+
         a. User cases:
+
             i. 5.1 - Login
-                - Acceptance Criteria
+                - Acceptance Criteria:
                     - [x] After execution, it should create a new refresh token and store it with the user
                     - [x] After execution, it should create a new access token
                     - [x] After execution, it should return the new refresh token and access token
+                    - [x] Refresh token and access token should expire after certain time has passed
             ii. 5.2 - Refresh token
-                - Acceptance Criteria
+                - Acceptance Criteria:
                     - [x] After execution, it should revoke the previous refresh token and return a new access token
                     - [x] After execution, if refresh token does not match with user or was not found, it should throw an error
 - [x] Swagger documentation
 - [x] Unit testing
 - [x] Github workflows for automated unit tests on pull request
-- [] Deployment
-    - [] Deployment of service
-    - [] Deployment of DB
-- [] Research about reporting
+- [x] Deployment
+    - [x] Deployment of service
+    - [x] Deployment of DB
+    
+# Documentation
+- [x] Readme
+- [x] Application documentation
