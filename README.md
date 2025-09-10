@@ -1,4 +1,20 @@
 # Zebrands Backend Technical Test Project
+
+## Table of content
+- [Deployed environment](#deployed-environment)
+    - [Deployed url](#deployed-url-zebrands-products-catalog-api)
+    - [Credentials of the superuser](#credentials-of-the-superuser)
+- [Documentation about the project](#documentation-about-the-project)
+- [Technologies, frameworks and libraries](#technologies-frameworks-and-libraries)
+- [Project structure](#project-structure)
+- [Getting started locally](#getting-started-locally)
+    - [Docker](#docker)
+    - [Initial Setup](#initial-setup)
+    - [Environment variables](#environment-variables)
+    - [Executing the application](#executing-the-application)
+- [Testing](#testing)
+    - [Running locally](#running-locally)
+
 ## Deployed environment
 ### Deployed url: [Zebrands Products Catalog API](http://3.129.97.67/api/docs#/)
 This url redirects you to the swagger documentation of the API
@@ -101,15 +117,15 @@ After the containers finished building, go to the following url where you will h
 The tests are configured to run on every pull request throught a github workflow. You can run the tests locally too.
 
 ### Running locally
-[Install](https://docs.astral.sh/uv/getting-started/installation/) the uv package manager.
+1. [Install](https://docs.astral.sh/uv/getting-started/installation/) the uv package manager.
 
-Once you've installed `uv`, you can install all the project packages by running the following command
-```sh
-uv sync --locked
-```
-- This command will create you a python environment (or use the one you have in case there is) and install the correct version of the libraries. 
+2. Once you've installed `uv`, you can install all the project packages by running the following command
+    ```sh
+    uv sync --locked
+    ```
+    - This command will create you a python environment (or use the one you have in case there is) and install the correct version of the libraries. 
 
-Locate yourself where the `manage.py` file is and run the following command to run the whole test suite
-```sh
-uv run manage.py test api -v 2
-```
+3. Locate yourself where the `manage.py` file is and run the following command to run the whole test suite
+    ```sh
+    uv run manage.py test api -v 2
+    ```
