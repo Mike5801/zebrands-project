@@ -44,19 +44,18 @@
                 - Acceptance Criteria:
                     - [x] Only admins should be able to perform this
                     - [x] After execution, the product should not exist in the database
-    - [] 3. As an Admin, I want to receive notifications on any change of products, so that I can track the history of the products
+    - [x] 3. As an Admin, I want to receive notifications on any change of products, so that I can track the history of the products
         a. Use cases:
             i. 3.1 - Send email notification on change of products
                 - Acceptance Criteria:
-                    - [] After an execution of update or delete on products, an email should be sent to all the admins
-    - [] 4. As an Anonymous user, I want to view the products so that I can know if what I want is available for purchase
+                    - [x] After an execution of update or delete on products, an email should be sent to all the admins
+    - [x] 4. As an Anonymous user, I want to view the products so that I can know if what I want is available for purchase
         a. Use cases:
             i. 4.1 - Read products
                 - Acceptance Criteria:
                     - [x] After execution, users will get all the products in the database
                     - [x] Users should be able to see one product
                         - [x] For every individual product seen, the views counter should increase
-                    - [] Users should be able to see a range of products
     - [x] 5. As an Anonymouse user with admin account, I want to sign in to the catalog system, so that I can perform admin actions
         a. User cases:
             i. 5.1 - Login
@@ -68,8 +67,8 @@
                 - Acceptance Criteria
                     - [x] After execution, it should revoke the previous refresh token and return a new access token
                     - [x] After execution, if refresh token does not match with user or was not found, it should throw an error
-- [] Swagger documentation
-- [] Unit testing
+- [x] Swagger documentation
+- [x] Unit testing
 - [x] Github workflows for automated unit tests on pull request
 - [] Deployment
     - [] Deployment of service
