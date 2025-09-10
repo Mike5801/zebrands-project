@@ -4,25 +4,26 @@
 This url redirects you to the swagger documentation of the API
 
 ### Credentials of the superuser
-```
+- For testing and development matters, the access token expires in `1 minute` and the refresh token in `5 minutes`
+```sh
 username = "admin"
 password = "admin"
 ```
 
-## Getting started locally
-### Docker
-Install [Docker](https://docs.docker.com/get-started/get-docker/) as this project uses docker to containerize the environment
+## Documentation about the project
+You can find more details about the project requirements definition and the design in the `documentation` folder of this repository.
 
-### Technologies, frameworks and libraries
-- Package manager: To manage the project packages, this project uses `uv` which is a fast Python package and project manager built using Rust. [More about uv](https://docs.astral.sh/uv/)
-    - This also allows a better control of the packages installed and enhances the development of the application by ensuring package consistency thanks to the `uv.lock` file
-- REST API: The REST API is developed using django rest framework due to the built in features like authentication, testing framework and an ORM
+## Technologies, frameworks and libraries
+- Package manager: To manage the project packages, this project uses `uv` which is a fast Python package and project manager built using Rust. [More about uv](https://docs.astral.sh/uv/).
+    - This also allows a better control of the packages installed and enhances the development of the application by ensuring package consistency thanks to the `uv.lock` file.
+- REST API: The REST API is developed using django rest framework due to the built in features like authentication, testing framework and an ORM.
 - Email notifications: For the email notifications, its using `SMTP Gmail` as Amazon SES production environment is not available without a website and a domain.
     - Without the production environment, we can only send emails to verified emails in the AWS dashboard, something that is not realistic for the purpose of this project as it makes sense to send emails without this verification.
+- Containerization: Used `docker` to containerize the project. This allows the project to run on any infrastructure by creating a bundle of the application's code with the environment, files and libraries needed.
+- Database: Used `PostgreSQL` it is proven to be a robust relational database for scalability, perfomance and it is open source.
 
-### Project structure
+## Project structure
 ```
-- .github
 - catalog-system
     - api
         - migrations
@@ -55,31 +56,42 @@ This project structure allows maintainability and scalability for small to mediu
         - main
     ```
 
+## Getting started locally
+### Docker
+Install [Docker](https://docs.docker.com/get-started/get-docker/) as this project uses docker to containerize the environment
+
+### Initial setup
+Clone the repository:
+```sh
+git clone https://github.com/Mike5801/zebrands-project.git
+cd zebrands-project
+```
+
 ### Environment variables
 To run this project locally, you need to create 2 `.env` files:
 - Top level (same level as `catalog-system`): This `.env` file is used to create the PostgreSQL container with the necessary configuration
-    ```
-    DB_USERNAME="" # Main username created for the PostgreSQL image
-    DB_PASSWORD="" # Password of the main username
-    DB_NAME="" # Name of the database that will be created once the image is built
-    ```
-- Inside catalog-system: This `.env` file is used in the django project to handle database connections and email provider credentials
-    ```
-    DB_NAME="" # Same as the one defined in top level .env
-    DB_USER="" # Same as the one defined in top level .env
-    DB_PASSWORD="" # Same as the one defined in top level .env
-    DB_HOST="zebrands-postgres-db" # Name of the service in docker-compose.yaml
-    DB_PORT="5432" # Internal port of docker container defined in docker-compose.yaml
-    EMAIL_HOST_PASSWORD="" # GMAIL application password
-    EMAIL_HOST_USER="" # GMAIL email address
-    ```
+```
+DB_USERNAME="" # Main username created for the PostgreSQL image
+DB_PASSWORD="" # Password of the main username
+DB_NAME="" # Name of the database that will be created once the image is built
+```
+- Inside `catalog-system`: This `.env` file is used in the django project to handle database connections and email provider credentials
+```
+DB_NAME="" # Same as the one defined in top level .env
+DB_USER="" # Same as the one defined in top level .env
+DB_PASSWORD="" # Same as the one defined in top level .env
+DB_HOST="zebrands-postgres-db" # Name of the service in docker-compose.yaml
+DB_PORT="5432" # Internal port of docker container defined in docker-compose.yaml
+EMAIL_HOST_PASSWORD="" # GMAIL application password
+EMAIL_HOST_USER="" # GMAIL email address
+```
 ### Executing the application
 Once the environment variables are setup with docker installed, execute the following command to initialize the environment
-```
-docker compose up
+```sh
+docker compose up --build
 ```
 - For development of the application, run the following command as it will sync and/or rebuild the application based on changes done to the app.
-    ```
+    ```sh
     docker compose watch
     ```
 After the containers finished building, go to the following url where you will have access to the swagger documentation
@@ -92,12 +104,12 @@ The tests are configured to run on every pull request throught a github workflow
 [Install](https://docs.astral.sh/uv/getting-started/installation/) the uv package manager.
 
 Once you've installed `uv`, you can install all the project packages by running the following command
-```
+```sh
 uv sync --locked
 ```
 - This command will create you a python environment (or use the one you have in case there is) and install the correct version of the libraries. 
 
 Locate yourself where the `manage.py` file is and run the following command to run the whole test suite
-```
+```sh
 uv run manage.py test api -v 2
 ```

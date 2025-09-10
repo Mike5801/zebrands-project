@@ -4,8 +4,8 @@
 # Design
 - [x] Decide Stack
 - [x] Database design
-- [] Architecture design
-- [] Architecture scaled proposal
+- [x] Architecture design
+- [x] Architecture scaled proposal
 
 # Overall implementation steps
 - Setup environment
@@ -18,9 +18,7 @@
         a. Use cases:
 
             i. 1.1 - Create users
-
                 - Acceptance Criteria:
-
                     - [x] Only admins should be able to perform this
                     - [x] After execution, a new user with the specified username and encrypted password should be created in the database
                     - [x] If a user already exists, it should not create a user in the database and throw an error
@@ -39,7 +37,6 @@
         a. Use cases:
 
             i. 2.1 - Create products
-            
                 - Acceptance Criteria:
                     - [x] Only admins should be able to perform this
                     - [x] After execution, a new product should be created in the database with the specified parameters
@@ -57,7 +54,7 @@
 
             i. 3.1 - Send email notification on change of products
                 - Acceptance Criteria:
-                    - [x] After an execution of update or delete on products, an email should be sent to all the admins
+                    - [x] After an execution of create, update or delete on products, an email should be sent to all the admins
     - [x] 4. As an Anonymous user, I want to view the products so that I can know if what I want is available for purchase
 
         a. Use cases:
@@ -72,12 +69,13 @@
         a. User cases:
 
             i. 5.1 - Login
-                - Acceptance Criteria
+                - Acceptance Criteria:
                     - [x] After execution, it should create a new refresh token and store it with the user
                     - [x] After execution, it should create a new access token
                     - [x] After execution, it should return the new refresh token and access token
+                    - [x] Refresh token and access token should expire after certain time has passed
             ii. 5.2 - Refresh token
-                - Acceptance Criteria
+                - Acceptance Criteria:
                     - [x] After execution, it should revoke the previous refresh token and return a new access token
                     - [x] After execution, if refresh token does not match with user or was not found, it should throw an error
 - [x] Swagger documentation
@@ -86,4 +84,7 @@
 - [x] Deployment
     - [x] Deployment of service
     - [x] Deployment of DB
-- [] Research about reporting
+    
+# Documentation
+- [x] Readme
+- [x] Application documentation
