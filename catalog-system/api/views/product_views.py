@@ -28,6 +28,9 @@ ERROR_SCHEMA = {
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_products(request):
+    """
+    Gets products from data base
+    """
     try:
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
@@ -73,6 +76,9 @@ def get_products(request):
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
 def create_product(request):
+    """
+    Create product in data base
+    """
     try:
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
@@ -100,6 +106,9 @@ def create_product(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_single_product(request, id):
+    """
+    Get one product based on id from database
+    """
     try:
         product = Product.objects.get(sku=id)
         product.views = product.views + 1
@@ -150,6 +159,9 @@ def get_single_product(request, id):
 @api_view(["PUT"])
 @permission_classes([IsAdminUser])
 def update_product(request, id):
+    """
+    Update one product based on id from database
+    """
     try:
         product = Product.objects.get(sku=id)
         serializer = ProductSerializer(product, data=request.data)
@@ -187,6 +199,9 @@ def update_product(request, id):
 @api_view(["DELETE"])
 @permission_classes([IsAdminUser])
 def delete_product(request, id):
+    """
+    Delete one product based on id from database
+    """
     try:
         product = Product.objects.get(sku=id)
         product_sku = product.sku

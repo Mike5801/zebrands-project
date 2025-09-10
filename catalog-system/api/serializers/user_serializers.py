@@ -4,6 +4,9 @@ from rest_framework import serializers
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    User serializer used as schema for reading users
+    """
     class Meta:
         model = User
         fields = [
@@ -19,6 +22,9 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "is_superuser", "date_joined", "last_login"]
         
 class UserInputSerializer(serializers.ModelSerializer):
+    """
+    User input serializer used as schema for creating and updating users
+    """
     password = serializers.CharField(write_only=True, required=True)
     
     class Meta:
