@@ -1,7 +1,6 @@
 from django.core.mail import send_mail
 from main.settings import EMAIL_HOST_USER
 from django.contrib.auth import get_user_model
-import logging
 
 User = get_user_model()
 

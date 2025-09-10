@@ -469,7 +469,10 @@ class DeleteProductTests(SimpleTestCase):
         request = self.factory.delete("/products/delete/123")
         force_authenticate(request, user=admin_user())
         with patch("api.views.product_views.Product.objects.get") as get_mock:
-            product = SimpleNamespace()
+            product = SimpleNamespace(
+                sku = "123",
+                name = "deleted_product"
+            )
             product.delete = MagicMock(side_effect=Exception("db down"))
             get_mock.return_value = product
 
