@@ -19,11 +19,5 @@ ADD . /app
 WORKDIR /app
 RUN uv sync --locked
 
-# Migrate models to database
-RUN uv run manage.py makemigrations
-RUN uv run manage.py migrate
-
 # Expose the container port to 3001
 EXPOSE 3001
-
-CMD ["uv", "run", "manage.py", "runserver", "0.0.0.0:8000"]
