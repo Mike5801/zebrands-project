@@ -139,7 +139,8 @@ class CreateProductTests(SimpleTestCase):
         }
         request = self.factory.post("/products/create", mock_data, format="json")
         force_authenticate(request, user=admin_user())
-        with patch("api.views.product_views.ProductSerializer") as serializer_cls:
+        with patch("api.views.product_views.ProductSerializer") as serializer_cls, \
+            patch("api.views.product_views.notify_via_email") as email_mock:
             serializer_instance = MagicMock()
             serializer_instance.is_valid.return_value = True
             serializer_instance.data = {
@@ -154,6 +155,7 @@ class CreateProductTests(SimpleTestCase):
             
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        email_mock.assert_called_once()
         serializer_cls.assert_called_once_with(data=mock_data)
         serializer_instance.is_valid.assert_called_once_with()
         serializer_instance.save.assert_called_once_with()
@@ -240,7 +242,8 @@ class UpdateProductTests(SimpleTestCase):
         request = self.factory.put("/products/update/123", mock_data, format="json")
         force_authenticate(request, user=admin_user())
         with patch("api.views.product_views.Product.objects.get") as get_mock, \
-            patch("api.views.product_views.ProductSerializer") as serializer_cls:
+            patch("api.views.product_views.ProductSerializer") as serializer_cls, \
+            patch("api.views.product_views.notify_via_email") as email_mock:
             product = SimpleNamespace(
                 name="product",
                 price=100,
@@ -262,6 +265,7 @@ class UpdateProductTests(SimpleTestCase):
             
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        email_mock.assert_called_once()
         get_mock.assert_called_once_with(sku="123")
         serializer_cls.assert_called_once_with(product, data=mock_data)
         serializer_instance.is_valid.assert_called_once_with()
@@ -399,8 +403,12 @@ class DeleteProductTests(SimpleTestCase):
         # Define mock data and functions
         request = self.factory.delete("/products/delete/123")
         force_authenticate(request, user=admin_user())
-        with patch("api.views.product_views.Product.objects.get") as get_mock:
-            product = SimpleNamespace()
+        with patch("api.views.product_views.Product.objects.get") as get_mock, \
+            patch("api.views.product_views.notify_via_email") as email_mock:
+            product = SimpleNamespace(
+                sku = "123",
+                name = "deleted_product"
+            )
             product.delete = MagicMock()
             get_mock.return_value = product
             # Test function with mock data
@@ -408,6 +416,7 @@ class DeleteProductTests(SimpleTestCase):
             
         # Assertions
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        email_mock.assert_called_once()
         get_mock.assert_called_once_with(sku="123")
         product.delete.assert_called_once()
     

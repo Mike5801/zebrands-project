@@ -1,10 +1,9 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
-from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, inline_serializer
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 from api.serializers import UserInputSerializer, UserSerializer
 
 User = get_user_model()
@@ -32,8 +31,11 @@ def get_users(request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
     
 @extend_schema(
     tags=["Users"],
@@ -76,8 +78,10 @@ def create_user(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
-        print(e)
-        return Response({"message": f"{e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
     
 @extend_schema(
     tags=["Users"],
@@ -98,8 +102,11 @@ def get_single_user(request, id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 @extend_schema(
     tags=["Users"],
@@ -144,8 +151,11 @@ def update_user(request, id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 @extend_schema(
     tags=["Users"],
@@ -179,5 +189,8 @@ def delete_user(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response(
+            { "message": e },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

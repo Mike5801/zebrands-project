@@ -70,7 +70,7 @@
                     - [x] After execution, if refresh token does not match with user or was not found, it should throw an error
 - [] Swagger documentation
 - [] Unit testing
-- [] Github workflows for automated unit tests on pull request
+- [x] Github workflows for automated unit tests on pull request
 - [] Deployment
     - [] Deployment of service
     - [] Deployment of DB
