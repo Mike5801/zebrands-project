@@ -5,6 +5,9 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 def notify_via_email(product_id, product_name, owner, action, fail_silently=True):
+    """
+    Sends email notifications to all existing users in the database
+    """
     try:
         users = User.objects.all()
         receiver_list = [user.email for user in users if user.email]

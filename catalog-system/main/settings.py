@@ -64,9 +64,6 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Swagger documentation for Zebrands API",
     "VERSION": "1.0.0",
     "SECURITY": [{"bearerAuth": []}],
-    "SERVERS": [
-        {"url": os.environ["SERVER_URL"]}
-    ],
     "COMPONENTS": {
         "SECURITY_SCHEMES": {
             "bearerAuth": {

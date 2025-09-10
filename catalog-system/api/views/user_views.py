@@ -27,6 +27,9 @@ ERROR_SCHEMA = {
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
 def get_users(request):
+    """
+    Get all users from database
+    """
     try:
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
@@ -64,6 +67,9 @@ def get_users(request):
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
 def create_user(request):
+    """
+    Create an admin user in the database
+    """
     try:
         user = User.objects.filter(username=request.data["username"])
         if user:
@@ -96,6 +102,9 @@ def create_user(request):
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
 def get_single_user(request, id):
+    """
+    Get a single user based on id from the database
+    """
     try:
         user = User.objects.get(id=id)
         serializer = UserSerializer(user)
@@ -137,6 +146,9 @@ def get_single_user(request, id):
 @api_view(["PUT"])
 @permission_classes([IsAdminUser])
 def update_user(request, id):
+    """
+    Update a single user based on id in the database
+    """
     try:
         user = User.objects.get(id=id)
         if user.is_superuser == True:
@@ -178,6 +190,9 @@ def update_user(request, id):
 @api_view(["DELETE"])
 @permission_classes([IsAdminUser])
 def delete_user(request, id):
+    """
+    Delete a single user based on id in the database
+    """
     try:
         user = User.objects.get(id=id)
         if user.is_superuser == True:
