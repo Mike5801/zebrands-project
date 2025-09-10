@@ -27,7 +27,7 @@ password = "admin"
 ```
 
 ## Documentation about the project
-You can find more details about the project requirements definition and the design in the `documentation` folder of this repository.
+You can find more details about the project requirements definition and the design  (architecture diagram and its scaled version) in the `documentation` folder of this repository.
 
 ## Technologies, frameworks and libraries
 - Package manager: To manage the project packages, this project uses `uv` which is a fast Python package and project manager built using Rust. [More about uv](https://docs.astral.sh/uv/).
