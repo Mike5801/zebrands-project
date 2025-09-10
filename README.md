@@ -57,7 +57,7 @@ This project structure allows maintainability and scalability for small to mediu
 
 ### Environment variables
 To run this project locally, you need to create 2 `.env` files:
-- Top level (same level as catalog-system): This `.env` file is used to create the PostgreSQL container with the necessary configuration
+- Top level (same level as `catalog-system`): This `.env` file is used to create the PostgreSQL container with the necessary configuration
     ```
     DB_USERNAME="" # Main username created for the PostgreSQL image
     DB_PASSWORD="" # Password of the main username
@@ -83,7 +83,7 @@ docker compose up
     docker compose watch
     ```
 After the containers finished building, go to the following url where you will have access to the swagger documentation
-- [http://localhost:3001](http://localhost:3001)
+- [http://localhost:3001/api/docs#/](http://localhost:3001/api/docs#/)
 
 ## Testing
 The tests are configured to run on every pull request throught a github workflow. You can run the tests locally too.

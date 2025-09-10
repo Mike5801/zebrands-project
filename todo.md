@@ -70,7 +70,7 @@
 - [x] Swagger documentation
 - [x] Unit testing
 - [x] Github workflows for automated unit tests on pull request
-- [] Deployment
-    - [] Deployment of service
-    - [] Deployment of DB
+- [x] Deployment
+    - [x] Deployment of service
+    - [x] Deployment of DB
 - [] Research about reporting
